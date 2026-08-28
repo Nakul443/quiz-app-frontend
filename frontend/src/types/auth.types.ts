@@ -1,4 +1,6 @@
 // this file contains TypeScript interfaces for authentication-related data structures used in the application
+// schemas for validation and type-checking of authentication data, such as user information, tokens, and authentication state
+// writes down rules for what data is allowed/required to pass between screens
 
 import { UserRole } from '../constants/roles';
 

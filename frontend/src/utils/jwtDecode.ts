@@ -1,4 +1,5 @@
 // this file contains utility functions for decoding JWT tokens and checking their expiration status
+// takes the token string and pulls out role and expiration from them
 
 import { jwtDecode } from 'jwt-decode';
 import { DecodedToken } from '../types/auth.types';

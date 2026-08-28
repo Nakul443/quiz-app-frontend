@@ -1,4 +1,5 @@
 // this file contains TypeScript interfaces for the API responses and data structures used in the application
+// basically rules describing the shape data must follow when it is sent to or received from the backend API
 
 export interface ApiResponse<T> {
   success: boolean;
