@@ -1,3 +1,7 @@
+// This file defines the AttemptHistoryScreen component, which displays a list of the user's previous quiz attempts.
+// It fetches the attempt history data using the useAttemptHistory hook and presents each attempt with its status, score, and date taken.
+// The component also allows users to refresh the list and navigate to the AttemptResultScreen for completed attempts or resume in-progress attempts.
+
 import React from 'react';
 import { View, Text, FlatList, RefreshControl } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
