@@ -25,7 +25,7 @@ export const registerSchema = z.object({
     .min(1, 'Email is required')
     .email('Please enter a valid email address'),
   role: z.enum(['admin', 'user'], {
-    required_error: 'Please select a role',
+    message: 'Please select a role',
   }),
   password: z
     .string()
