@@ -32,8 +32,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const decoded = decodeToken(token);
     if (decoded) {
       const user: User = {
-        id: decoded.id || decoded.user_id || '',
-        username: decoded.username,
+        _id: decoded._id || decoded.id || decoded.user_id || '',
+        name: decoded.name,
         email: decoded.email,
         role: decoded.role,
       };
@@ -83,8 +83,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           const decoded = decodeToken(token);
           if (decoded) {
             const user: User = {
-              id: decoded.id || decoded.user_id || '',
-              username: decoded.username,
+              _id: decoded._id || decoded.id || decoded.user_id || '',
+              name: decoded.name,
               email: decoded.email,
               role: decoded.role,
             };

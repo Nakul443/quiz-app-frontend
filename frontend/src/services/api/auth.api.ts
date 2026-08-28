@@ -11,7 +11,7 @@ export interface LoginParams {
 }
 
 export interface RegisterParams {
-  username: string;
+  name: string;
   email: string;
   role: UserRole;
   password?: string;
@@ -22,7 +22,7 @@ export const loginUser = async (params: { email: string; password?: string }): P
   return response.data;
 };
 
-export const registerUser = async (params: { username: string; email: string; role: UserRole; password?: string }): Promise<ApiResponse<RegisterResponseData>> => {
+export const registerUser = async (params: { name: string; email: string; role: UserRole; password?: string }): Promise<ApiResponse<RegisterResponseData>> => {
   const response = await httpClient.post<ApiResponse<RegisterResponseData>>('/auth/register', params);
   return response.data;
 };

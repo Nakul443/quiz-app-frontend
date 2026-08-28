@@ -15,11 +15,11 @@ export const loginSchema = z.object({
 });
 
 export const registerSchema = z.object({
-  username: z
+  name: z
     .string()
-    .min(3, 'Username must be at least 3 characters long')
-    .max(20, 'Username must be at most 20 characters long')
-    .regex(/^[a-zA-Z0-9_]+$/, 'Username can only contain alphanumeric characters and underscores'),
+    .min(3, 'Name must be at least 3 characters long')
+    .max(30, 'Name must be at most 30 characters long')
+    .regex(/^[a-zA-Z\s]+$/, 'Name can only contain alphabetic characters and spaces'),
   email: z
     .string()
     .min(1, 'Email is required')

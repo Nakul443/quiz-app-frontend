@@ -1,13 +1,13 @@
 import { z } from 'zod';
 
 export const questionSchema = z.object({
-  text: z
+  question_text: z
     .string()
     .min(5, 'Question text must be at least 5 characters long'),
   options: z
     .array(
       z.object({
-        text: z.string().min(1, 'Option text is required'),
+        option_text: z.string().min(1, 'Option text is required'),
       })
     )
     .min(2, 'At least 2 options are required')

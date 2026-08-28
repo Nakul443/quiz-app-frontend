@@ -1,97 +1,117 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Quiz & Assessment App (Frontend)
 
-# Getting Started
+A modern, high-performance, and fully responsive React Native application built with **TypeScript**, **NativeWind (Tailwind CSS)**, and **React Query (TanStack Query)**. This application represents the frontend layer of a dual-repo Quiz/Assessment system.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+---
 
-## Step 1: Start Metro
+## 🚀 Key Features
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+### 🔐 Authentication & Session Guarding
+*   **Role-Based Access Control**: Separate, clean navigation hierarchies for **Admins** and **Users**.
+*   **Token Persistence**: Encrypted JWT storage using `react-native-keychain` with client-side expiration checks on application boot.
+*   **Global Interceptor Pipelines**: Complete Axios client integration automatically attaching credentials and responding to `401 Unauthorized` errors with graceful logouts.
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+### 👑 Admin Console (Management System)
+*   **Quiz CRUD Dashboard**: Complete creation and deletion capabilities for assessments.
+*   **Active Status Toggling**: Instantly activate (`is_active: true`) or deactivate quizzes.
+*   **Granular Question Management**:
+    *   Interactive multiple-choice forms supporting up to 10 choices.
+    *   Radio-style correct option indicators mapping to strict `is_correct` boolean option payloads.
+    *   Sequential `order_index` generation for structured presentation.
+*   **Submissions Review**: Real-time listing of candidate scores, emails, and exact timestamps.
 
-```sh
-# Using npm
+### 👨‍🎓 User Portal (Exam Engine)
+*   **Interactive Lobby**: Browse published quizzes and view time limits, instructions, and question counts.
+*   **Exam Progression Dashboard**:
+    *   Clean side-to-side navigation through assessment sections.
+    *   **Dynamic Countdown Timer**: Styled color changes reflecting high visual urgency as time runs low.
+    *   **Graceful Auto-Submit**: Triggers instant background submissions immediately when the timer hits zero.
+    *   **Background Session Resilience**: Active React Native AppState listeners to automatically fetch, validate, and adjust remaining duration upon returning to the app.
+    *   **Real-Time Back-up**: Auto-persists selected choices on every click to eliminate test-taking data loss.
+*   **Detailed Results feedback**:
+    *   Aggregated scorecards highlighting Pass/Fail thresholds.
+    *   Detailed review showing correct vs. incorrect answers and question metadata.
+*   **Attempt History**: Review past scores, timestamps, and performance metrics.
+
+---
+
+## 🛠️ Stack & Technologies
+
+*   **Runtime**: React Native
+*   **Language**: TypeScript (Strict compile checks)
+*   **Styling**: NativeWind (Tailwind CSS engine)
+*   **Data Fetching & Caching**: TanStack React Query (v5)
+*   **State Management**: React Context API (Auth session states)
+*   **Forms & Validation**: React Hook Form + Zod (Strict schema guards)
+*   **Networking**: Axios (HTTP Interceptors)
+
+---
+
+## 📁 Workspace Structure
+
+```
+src/
+├── config/                 # Environment & API Configurations
+├── constants/              # Application roles and theme configuration
+├── types/                  # Typed representations (API payloads & Router params)
+├── utils/                  # Encrypted storage, JWT Decoders, and Error formatting
+├── services/               # Axios HttpClient & Resource-specific API wrappers
+├── context/                # Global Auth Session providers
+├── hooks/                  # React Query wrapper hooks (Queries & Mutations)
+├── validators/             # Zod form-level schemas (Auth, Quiz, Questions)
+├── components/             # Reusable atomic UI (Button, Input, QuestionCard, Timer, etc.)
+├── navigation/             # Navigation stacks and tabs (RootNavigator, AuthStack, Tabs)
+└── screens/                # Core screens organized by Auth, Admin, and User folders
+```
+
+---
+
+## ⚡ Setup & Installation
+
+### 1. Prerequisites
+Ensure you have the React Native environment set up correctly on your machine. You can follow the [Official React Native Environment Setup Guide](https://reactnative.dev/docs/set-up-your-environment).
+
+### 2. Install Dependencies
+Clone this repository, navigate to the `frontend/` subdirectory, and install the npm packages:
+```bash
+cd frontend
+npm install
+```
+
+### 3. Environment Variables
+Create a `.env` file in the `frontend/` directory (you can copy `.env.example` as a template):
+```env
+API_BASE_URL=http://localhost:5000/api
+```
+*Note: A valid, configured `API_BASE_URL` is **strictly required**. The application will fail loudly on boot if it is missing, protecting against silent connection issues.*
+
+### 4. Running the Application
+
+Start the **Metro Bundler**:
+```bash
 npm start
-
-# OR using Yarn
-yarn start
 ```
 
-## Step 2: Build and run your app
+Build and launch the native shells:
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
+#### Android
+```bash
 npm run android
-
-# OR using Yarn
-yarn android
 ```
 
-### iOS
+#### iOS
+```bash
+# Install native CocoaPods dependencies first (macOS only)
+bundle install && bundle exec pod install
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
+# Build and run iOS simulator
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+---
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+## 🔒 Security & Data Integrity Safeguards
 
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+1.  **Auth Routing Guard**: Routing boundaries are resolved strictly inside `RootNavigator` based on verified JWT roles, preventing visual access to admin menus by users.
+2.  **State-Proof Attempt Saving**: Unlike batched forms, every selected option patches the server in real-time. If a device crashes, restarts, or loses connectivity, reloading the attempt instantly restores the student's exact state.
+3.  **Autoritative Clock**: The timer countdown operates purely as a visual indicator. If a user tries to freeze or tamper with their client-side clock, the backend's lazy-expiry check on next request will automatically finalize the attempt.

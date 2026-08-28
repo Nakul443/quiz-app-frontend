@@ -27,10 +27,10 @@ export const QuizDetailAdminScreen: React.FC<Props> = ({ route, navigation }) =>
   const handleToggleStatus = () => {
     if (!quiz) return;
     updateStatusMutation.mutate(
-      { id: quiz.id, is_published: !quiz.is_published },
+      { _id: quiz._id, is_active: !quiz.is_active },
       {
         onSuccess: () => {
-          Alert.alert('Success', `Quiz ${!quiz.is_published ? 'published' : 'unpublished'} successfully!`);
+          Alert.alert('Success', `Quiz ${!quiz.is_active ? 'published' : 'unpublished'} successfully!`);
         },
       }
     );
@@ -92,15 +92,15 @@ export const QuizDetailAdminScreen: React.FC<Props> = ({ route, navigation }) =>
           </Text>
           <View
             className={`px-2.5 py-1 rounded-full ${
-              quiz.is_published ? 'bg-success-light' : 'bg-gray-100'
+              quiz.is_active ? 'bg-success-light' : 'bg-gray-100'
             }`}
           >
             <Text
               className={`text-xs font-semibold ${
-                quiz.is_published ? 'text-success-dark' : 'text-text-secondary'
+                quiz.is_active ? 'text-success-dark' : 'text-text-secondary'
               }`}
             >
-              {quiz.is_published ? 'Published' : 'Draft'}
+              {quiz.is_active ? 'Published' : 'Draft'}
             </Text>
           </View>
         </View>
@@ -127,9 +127,9 @@ export const QuizDetailAdminScreen: React.FC<Props> = ({ route, navigation }) =>
         {/* Quiz Actions */}
         <View className="flex-row space-x-3">
           <Button
-            title={quiz.is_published ? 'Unpublish' : 'Publish Quiz'}
+            title={quiz.is_active ? 'Unpublish' : 'Publish Quiz'}
             onPress={handleToggleStatus}
-            variant={quiz.is_published ? 'outline' : 'primary'}
+            variant={quiz.is_active ? 'outline' : 'primary'}
             isLoading={updateStatusMutation.isPending}
             className="flex-1 py-2.5"
             textClassName="text-sm font-semibold"
@@ -192,7 +192,7 @@ export const QuizDetailAdminScreen: React.FC<Props> = ({ route, navigation }) =>
       ) : (
         questions?.map((question, qIdx) => {
           return (
-            <Card key={question.id} className="mb-4 bg-white">
+            <Card key={question._id} className="mb-4 bg-white">
               <View className="flex-row justify-between items-start mb-3">
                 <Text className="text-sm font-bold text-primary mr-2">
                   Q{qIdx + 1}
@@ -200,7 +200,7 @@ export const QuizDetailAdminScreen: React.FC<Props> = ({ route, navigation }) =>
                 <View className="flex-row space-x-1">
                   <Button
                     title="Edit"
-                    onPress={() => navigation.navigate('EditQuestion', { quizId, questionId: question.id })}
+                    onPress={() => navigation.navigate('EditQuestion', { quizId, questionId: question._id })}
                     variant="text"
                     size="sm"
                     className="p-1 px-2.5"
@@ -208,7 +208,7 @@ export const QuizDetailAdminScreen: React.FC<Props> = ({ route, navigation }) =>
                   />
                   <Button
                     title="Delete"
-                    onPress={() => handleDeleteQuestion(question.id)}
+                    onPress={() => handleDeleteQuestion(question._id)}
                     variant="text"
                     size="sm"
                     className="p-1 px-2.5"
@@ -218,18 +218,18 @@ export const QuizDetailAdminScreen: React.FC<Props> = ({ route, navigation }) =>
               </View>
 
               <Text className="text-base font-semibold text-text mb-4 leading-6">
-                {question.text}
+                {question.question_text}
               </Text>
 
               {/* Options list showing the correct answer with a green indicator */}
               <View className="space-y-2">
                 {question.options.map((opt, oIdx) => {
-                  const isCorrect = question.correct_option_id === opt.id;
+                  const isCorrect = opt.is_correct === true;
                   const letter = String.fromCharCode(65 + oIdx);
 
                   return (
                     <View
-                      key={opt.id}
+                      key={opt._id}
                       className={`flex-row items-center border rounded-xl p-3 mb-2 ${
                         isCorrect ? 'border-success bg-success-light' : 'border-gray-100 bg-gray-50/50'
                       }`}
@@ -248,7 +248,7 @@ export const QuizDetailAdminScreen: React.FC<Props> = ({ route, navigation }) =>
                           isCorrect ? 'text-success-dark font-semibold' : 'text-text-secondary'
                         }`}
                       >
-                        {opt.text}
+                        {opt.option_text}
                       </Text>
                       {isCorrect && (
                         <Text className="text-xs font-extrabold text-success mr-1">✓ Correct</Text>

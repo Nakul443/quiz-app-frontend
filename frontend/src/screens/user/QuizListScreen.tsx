@@ -19,7 +19,7 @@ export const QuizListScreen: React.FC<Props> = ({ navigation }) => {
   const { data: quizzes, isLoading, error, refetch, isRefetching } = useQuizzes();
 
   // Filter only active (published) quizzes for user view
-  const activeQuizzes = quizzes?.filter((quiz) => quiz.is_published) || [];
+  const activeQuizzes = quizzes?.filter((quiz) => quiz.is_active) || [];
 
   if (isLoading) {
     return <LoadingSpinner fullScreen />;
@@ -40,7 +40,7 @@ export const QuizListScreen: React.FC<Props> = ({ navigation }) => {
 
       <FlatList
         data={activeQuizzes}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item._id}
         refreshControl={
           <RefreshControl refreshing={isRefetching} onRefresh={() => { refetch(); }} colors={['#4f46e5']} />
         }
@@ -53,7 +53,7 @@ export const QuizListScreen: React.FC<Props> = ({ navigation }) => {
         renderItem={({ item }) => (
           <Card
             className="mb-4 bg-white"
-            onPress={() => navigation.navigate('QuizDetailUser', { quizId: item.id })}
+            onPress={() => navigation.navigate('QuizDetailUser', { quizId: item._id })}
           >
             <Text className="text-base font-bold text-text mb-1.5" numberOfLines={1}>
               {item.title}

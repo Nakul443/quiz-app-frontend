@@ -9,7 +9,7 @@ export const decodeToken = (token: string): DecodedToken | null => {
     const decoded = jwtDecode<DecodedToken>(token);
     return {
       ...decoded,
-      id: decoded.id || decoded.user_id || '', // Normalize user ID field
+      _id: decoded._id || decoded.id || decoded.user_id || '', // Normalize user ID field
     };
   } catch (error) {
     console.error('Failed to decode JWT token:', error);

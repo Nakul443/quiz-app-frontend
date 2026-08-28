@@ -7,7 +7,6 @@ import { submitAnswer, SubmitAnswerParams } from '../../services/api/attempt.api
 
 interface SubmitAnswerMutationParams {
   attemptId: string;
-  questionId: string;
   answer: SubmitAnswerParams;
 }
 
@@ -15,8 +14,8 @@ export const useSubmitAnswer = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ attemptId, questionId, answer }: SubmitAnswerMutationParams) =>
-      submitAnswer(attemptId, questionId, answer),
+    mutationFn: ({ attemptId, answer }: SubmitAnswerMutationParams) =>
+      submitAnswer(attemptId, answer),
     onSuccess: (_, variables) => {
       // Invalidate the attempt details to reflect the saved answer
       queryClient.invalidateQueries({

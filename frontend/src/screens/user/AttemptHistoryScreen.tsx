@@ -49,7 +49,7 @@ export const AttemptHistoryScreen: React.FC<Props> = ({ navigation }) => {
 
       <FlatList
         data={attempts}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item._id}
         refreshControl={
           <RefreshControl refreshing={isRefetching} onRefresh={() => { refetch(); }} colors={['#4f46e5']} />
         }
@@ -60,19 +60,13 @@ export const AttemptHistoryScreen: React.FC<Props> = ({ navigation }) => {
           />
         }
         renderItem={({ item }) => {
-          const isCompleted = item.status === 'completed';
+          const isCompleted = item.status === 'submitted' || item.status === 'auto_submitted';
 
           return (
             <Card
               className="mb-4 bg-white"
               onPress={() => {
-                if (isCompleted) {
-                  navigation.navigate('AttemptResult', { attemptId: item.id });
-                } else {
-                  // Active / In-progress, return to quiz taking stack or prompt user
-                  // We navigate to taking quiz safely
-                  navigation.navigate('AttemptResult', { attemptId: item.id });
-                }
+                navigation.navigate('AttemptResult', { attemptId: item._id });
               }}
             >
               <View className="flex-row justify-between items-start">
@@ -105,7 +99,7 @@ export const AttemptHistoryScreen: React.FC<Props> = ({ navigation }) => {
                 </View>
 
                 {/* Score Circle Badge */}
-                {isCompleted && item.score !== undefined ? (
+                {isCompleted && item.score !== null && item.score !== undefined ? (
                   <View className="bg-gray-50 border border-gray-100 rounded-xl px-3 py-2 items-center justify-center">
                     <Text className="text-base font-extrabold text-primary">
                       {item.score}%

@@ -30,8 +30,8 @@ export const deleteQuiz = async (id: string): Promise<ApiResponse<void>> => {
   return response.data;
 };
 
-export const updateQuizStatus = async (id: string, is_published: boolean): Promise<ApiResponse<Quiz>> => {
-  const response = await httpClient.patch<ApiResponse<Quiz>>(`/quizzes/${id}/status`, { is_published });
+export const updateQuizStatus = async (id: string, is_active: boolean): Promise<ApiResponse<Quiz>> => {
+  const response = await httpClient.patch<ApiResponse<Quiz>>(`/quizzes/${id}/status`, { is_active });
   return response.data;
 };
 

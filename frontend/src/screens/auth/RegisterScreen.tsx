@@ -23,7 +23,7 @@ export const RegisterScreen: React.FC<Props> = ({ navigation }) => {
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      username: '',
+      name: '',
       email: '',
       role: 'user',
       password: '',
@@ -70,16 +70,16 @@ export const RegisterScreen: React.FC<Props> = ({ navigation }) => {
             <View className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
               <Controller
                 control={control}
-                name="username"
+                name="name"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <Input
-                    label="Username"
-                    placeholder="Enter unique username"
+                    label="Full Name"
+                    placeholder="Enter full name"
                     onBlur={onBlur}
                     onChangeText={onChange}
                     value={value}
-                    error={errors.username?.message}
-                    autoCapitalize="none"
+                    error={errors.name?.message}
+                    autoCapitalize="words"
                     autoCorrect={false}
                   />
                 )}

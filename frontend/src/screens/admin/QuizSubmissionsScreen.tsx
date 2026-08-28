@@ -42,7 +42,7 @@ export const QuizSubmissionsScreen: React.FC<Props> = ({ route }) => {
   }
 
   if (error) {
-    return <ErrorMessage message={error.message} onRetry={refetch} />;
+    return <ErrorMessage message={error.message} onRetry={() => { refetch(); }} />;
   }
 
   return (
@@ -62,7 +62,7 @@ export const QuizSubmissionsScreen: React.FC<Props> = ({ route }) => {
       {/* Submissions List */}
       <FlatList
         data={submissions}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item._id}
         refreshControl={
           <RefreshControl refreshing={isRefetching} onRefresh={() => { refetch(); }} colors={['#4f46e5']} />
         }
@@ -77,13 +77,13 @@ export const QuizSubmissionsScreen: React.FC<Props> = ({ route }) => {
             <View className="flex-row justify-between items-center">
               <View className="flex-1 pr-3">
                 <Text className="text-base font-bold text-text mb-0.5">
-                  {item.user?.username || 'Anonymous User'}
+                  {item.user?.name || 'Anonymous User'}
                 </Text>
                 <Text className="text-xs text-text-secondary mb-2">
                   {item.user?.email || 'N/A'}
                 </Text>
                 <Text className="text-[10px] text-text-light">
-                  Submitted: {formatDate(item.completed_at)}
+                  Submitted: {formatDate(item.submitted_at)}
                 </Text>
               </View>
 

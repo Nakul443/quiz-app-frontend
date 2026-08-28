@@ -24,14 +24,14 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     <Card className="mb-4">
       {/* Question Text */}
       <Text className="text-base font-semibold text-text mb-4 leading-6">
-        {question.text}
+        {question.question_text}
       </Text>
 
       {/* Options List */}
       <View className="space-y-3">
         {question.options.map((option, index) => {
-          const isSelected = selectedOptionId === option.id;
-          const isCorrect = correctOptionId === option.id;
+          const isSelected = selectedOptionId === option._id;
+          const isCorrect = correctOptionId === option._id;
 
           let optionStyle = 'border-gray-200 bg-white';
           let optionTextStyle = 'text-text-secondary';
@@ -61,9 +61,9 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
           return (
             <TouchableOpacity
-              key={option.id}
+              key={option._id}
               disabled={isReadOnly}
-              onPress={() => onSelectOption && onSelectOption(option.id)}
+              onPress={() => onSelectOption && onSelectOption(option._id)}
               activeOpacity={isReadOnly ? 1 : 0.7}
               className={`flex-row items-center border rounded-xl p-4 mb-3 ${optionStyle}`}
             >
@@ -74,7 +74,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
               {/* Option Text */}
               <Text className={`flex-1 text-sm leading-5 ${optionTextStyle}`}>
-                {option.text}
+                {option.option_text}
               </Text>
             </TouchableOpacity>
           );

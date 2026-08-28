@@ -7,7 +7,7 @@ interface InputProps extends TextInputProps {
   containerClassName?: string;
 }
 
-export const Input = forwardRef<TextInput, InputProps>(
+export const Input = forwardRef<any, InputProps>(
   ({ label, error, containerClassName = '', style, ...props }, ref) => {
     return (
       <View className={`mb-4 w-full ${containerClassName}`}>

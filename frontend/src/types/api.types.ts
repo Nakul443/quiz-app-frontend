@@ -8,43 +8,49 @@ export interface ApiResponse<T> {
 }
 
 export interface Option {
-  id: string;
+  _id: string;
   question_id: string;
-  text: string;
+  option_text: string;
+  is_correct?: boolean; // only present for admin views / results, hidden from users attempting
+  order_index: number;
 }
 
 export interface Question {
-  id: string;
+  _id: string;
   quiz_id: string;
-  text: string;
+  question_text: string;
+  question_type: string;
+  order_index: number;
+  points: number;
   options: Option[];
-  correct_option_id?: string; // Optional because only admins can see this, or returned in results
 }
 
 export interface Quiz {
-  id: string;
+  _id: string;
   title: string;
   description: string;
   time_limit: number; // in minutes (or seconds, represented as a number)
-  is_published: boolean;
+  is_active: boolean;
   created_at?: string;
   questions?: Question[];
 }
 
 export interface Attempt {
-  id: string;
+  _id: string;
   user_id: string;
   quiz_id: string;
-  score?: number;
+  status: 'in_progress' | 'submitted' | 'auto_submitted';
+  score: number | null;
+  total_questions: number;
   started_at: string;
-  completed_at?: string | null;
-  time_remaining?: number; // in seconds
-  status: 'active' | 'completed';
+  submitted_at: string | null;
+  time_remaining?: number;
   quiz?: {
-    id: string;
+    _id: string;
     title: string;
     description: string;
     time_limit: number;
+    questions?: Question[];
   };
 }
 
@@ -63,15 +69,15 @@ export interface AttemptResultDetail {
 }
 
 export interface Submission {
-  id: string;
+  _id: string;
   user_id: string;
   quiz_id: string;
   score: number;
   started_at: string;
-  completed_at: string;
+  submitted_at: string;
   user: {
-    id: string;
-    username: string;
+    _id: string;
+    name: string;
     email: string;
   };
 }

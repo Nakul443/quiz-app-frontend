@@ -6,21 +6,21 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { updateQuizStatus } from '../../services/api/quiz.api';
 
 interface UpdateStatusParams {
-  id: string;
-  is_published: boolean;
+  _id: string;
+  is_active: boolean;
 }
 
 export const useUpdateQuizStatus = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, is_published }: UpdateStatusParams) =>
-      updateQuizStatus(id, is_published),
+    mutationFn: ({ _id, is_active }: UpdateStatusParams) =>
+      updateQuizStatus(_id, is_active),
     onSuccess: (_, variables) => {
       // Invalidate the quizzes list cache
       queryClient.invalidateQueries({ queryKey: ['quizzes'] });
       // Invalidate the specific quiz detail cache
-      queryClient.invalidateQueries({ queryKey: ['quizzes', variables.id] });
+      queryClient.invalidateQueries({ queryKey: ['quizzes', variables._id] });
     },
   });
 };

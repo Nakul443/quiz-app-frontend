@@ -5,19 +5,23 @@ import httpClient from '../httpClient';
 import { ApiResponse, Question } from '../../types/api.types';
 
 export interface CreateQuestionParams {
-  text: string;
+  question_text: string;
+  order_index: number;
   options: {
-    text: string;
+    option_text: string;
+    is_correct: boolean;
+    order_index: number;
   }[];
-  correct_option_index: number; // Index of the correct option
 }
 
 export interface UpdateQuestionParams {
-  text: string;
+  question_text: string;
+  order_index: number;
   options: {
-    text: string;
+    option_text: string;
+    is_correct: boolean;
+    order_index: number;
   }[];
-  correct_option_index: number;
 }
 
 export const getQuestions = async (quizId: string): Promise<ApiResponse<Question[]>> => {

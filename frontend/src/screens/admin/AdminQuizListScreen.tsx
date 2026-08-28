@@ -21,7 +21,7 @@ export const AdminQuizListScreen: React.FC<Props> = ({ navigation }) => {
   const updateStatusMutation = useUpdateQuizStatus();
 
   const handleToggleStatus = (id: string, currentStatus: boolean) => {
-    updateStatusMutation.mutate({ id, is_published: !currentStatus });
+    updateStatusMutation.mutate({ _id: id, is_active: !currentStatus });
   };
 
   if (isLoading) {
@@ -29,7 +29,7 @@ export const AdminQuizListScreen: React.FC<Props> = ({ navigation }) => {
   }
 
   if (error) {
-    return <ErrorMessage message={error.message} onRetry={refetch} />;
+    return <ErrorMessage message={error.message} onRetry={() => { refetch(); }} />;
   }
 
   return (
@@ -47,7 +47,7 @@ export const AdminQuizListScreen: React.FC<Props> = ({ navigation }) => {
 
       <FlatList
         data={quizzes}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item._id}
         refreshControl={
           <RefreshControl refreshing={isRefetching} onRefresh={() => { refetch(); }} colors={['#4f46e5']} />
         }
@@ -62,7 +62,7 @@ export const AdminQuizListScreen: React.FC<Props> = ({ navigation }) => {
         renderItem={({ item }) => (
           <Card
             className="mb-4 bg-white"
-            onPress={() => navigation.navigate('QuizDetailAdmin', { quizId: item.id })}
+            onPress={() => navigation.navigate('QuizDetailAdmin', { quizId: item._id })}
           >
             <View className="flex-row justify-between items-start mb-2">
               <View className="flex-1 pr-2">
@@ -77,15 +77,15 @@ export const AdminQuizListScreen: React.FC<Props> = ({ navigation }) => {
               {/* Status Badge */}
               <View
                 className={`px-2.5 py-1 rounded-full ${
-                  item.is_published ? 'bg-success-light' : 'bg-gray-100'
+                  item.is_active ? 'bg-success-light' : 'bg-gray-100'
                 }`}
               >
                 <Text
                   className={`text-xs font-semibold ${
-                    item.is_published ? 'text-success-dark' : 'text-text-secondary'
+                    item.is_active ? 'text-success-dark' : 'text-text-secondary'
                   }`}
                 >
-                  {item.is_published ? 'Published' : 'Draft'}
+                  {item.is_active ? 'Published' : 'Draft'}
                 </Text>
               </View>
             </View>
@@ -108,21 +108,21 @@ export const AdminQuizListScreen: React.FC<Props> = ({ navigation }) => {
               </View>
 
               <TouchableOpacity
-                onPress={() => handleToggleStatus(item.id, item.is_published)}
+                onPress={() => handleToggleStatus(item._id, item.is_active)}
                 disabled={updateStatusMutation.isPending}
                 activeOpacity={0.7}
                 className={`px-3 py-1.5 rounded-lg border ${
-                  item.is_published
+                  item.is_active
                     ? 'border-gray-200 bg-white'
                     : 'border-primary/20 bg-primary-light'
                 }`}
               >
                 <Text
                   className={`text-xs font-semibold ${
-                    item.is_published ? 'text-text-secondary' : 'text-primary'
+                    item.is_active ? 'text-text-secondary' : 'text-primary'
                   }`}
                 >
-                  {item.is_published ? 'Unpublish' : 'Publish'}
+                  {item.is_active ? 'Unpublish' : 'Publish'}
                 </Text>
               </TouchableOpacity>
             </View>

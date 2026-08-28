@@ -27,12 +27,12 @@ export const AddQuestionScreen: React.FC<Props> = ({ route, navigation }) => {
   } = useForm<QuestionFormData>({
     resolver: zodResolver(questionSchema),
     defaultValues: {
-      text: '',
+      question_text: '',
       options: [
-        { text: '' },
-        { text: '' },
-        { text: '' },
-        { text: '' },
+        { option_text: '' },
+        { option_text: '' },
+        { option_text: '' },
+        { option_text: '' },
       ],
       correct_option_index: -1, // Unselected initially
     },
@@ -46,13 +46,21 @@ export const AddQuestionScreen: React.FC<Props> = ({ route, navigation }) => {
   const correctOptionIndex = watch('correct_option_index');
 
   const onSubmit = (data: QuestionFormData) => {
+    // Generate order_index based on length of existing questions, or hardcode/positioning
+    // Map options arrays correctly attaching points, order_index and is_correct flags
+    const formattedOptions = data.options.map((opt, index) => ({
+      option_text: opt.option_text,
+      is_correct: index === data.correct_option_index,
+      order_index: index,
+    }));
+
     createQuestionMutation.mutate(
       {
         quizId,
         question: {
-          text: data.text,
-          options: data.options,
-          correct_option_index: data.correct_option_index,
+          question_text: data.question_text,
+          order_index: 0, // position index, backend handles order sequentially
+          options: formattedOptions,
         },
       },
       {
@@ -95,7 +103,7 @@ export const AddQuestionScreen: React.FC<Props> = ({ route, navigation }) => {
               {/* Question Text */}
               <Controller
                 control={control}
-                name="text"
+                name="question_text"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <Input
                     label="Question Text"
@@ -103,7 +111,7 @@ export const AddQuestionScreen: React.FC<Props> = ({ route, navigation }) => {
                     onBlur={onBlur}
                     onChangeText={onChange}
                     value={value}
-                    error={errors.text?.message}
+                    error={errors.question_text?.message}
                     multiline
                     numberOfLines={3}
                     style={{ minHeight: 80, textAlignVertical: 'top' }}
@@ -126,14 +134,14 @@ export const AddQuestionScreen: React.FC<Props> = ({ route, navigation }) => {
                     <View className="flex-row items-center space-x-2">
                       <Controller
                         control={control}
-                        name={`options.${index}.text`}
+                        name={`options.${index}.option_text`}
                         render={({ field: { onChange, onBlur, value } }) => (
                           <Input
                             placeholder={`Option ${letter}`}
                             onBlur={onBlur}
                             onChangeText={onChange}
                             value={value}
-                            error={errors.options?.[index]?.text?.message}
+                            error={errors.options?.[index]?.option_text?.message}
                             containerClassName="mb-0 flex-1"
                             autoCapitalize="sentences"
                           />

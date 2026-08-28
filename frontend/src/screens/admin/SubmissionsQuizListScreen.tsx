@@ -18,7 +18,7 @@ export const SubmissionsQuizListScreen: React.FC<Props> = ({ navigation }) => {
   }
 
   if (error) {
-    return <ErrorMessage message={error.message} onRetry={refetch} />;
+    return <ErrorMessage message={error.message} onRetry={() => { refetch(); }} />;
   }
 
   return (
@@ -32,7 +32,7 @@ export const SubmissionsQuizListScreen: React.FC<Props> = ({ navigation }) => {
 
       <FlatList
         data={quizzes}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item._id}
         refreshControl={
           <RefreshControl refreshing={isRefetching} onRefresh={() => { refetch(); }} colors={['#4f46e5']} />
         }
@@ -45,7 +45,7 @@ export const SubmissionsQuizListScreen: React.FC<Props> = ({ navigation }) => {
         renderItem={({ item }) => (
           <Card
             className="mb-4 bg-white"
-            onPress={() => navigation.navigate('QuizSubmissions', { quizId: item.id })}
+            onPress={() => navigation.navigate('QuizSubmissions', { quizId: item._id })}
           >
             <View className="flex-row justify-between items-center">
               <View className="flex-1 pr-4">

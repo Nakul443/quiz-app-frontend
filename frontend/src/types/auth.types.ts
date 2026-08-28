@@ -5,8 +5,8 @@
 import { UserRole } from '../constants/roles';
 
 export interface User {
-  id: string;
-  username: string;
+  _id: string;
+  name: string;
   email: string;
   role: UserRole;
 }
@@ -19,9 +19,10 @@ export interface AuthState {
 }
 
 export interface DecodedToken {
-  id: string;
+  id?: string; // fallback
+  _id?: string;
   user_id?: string; // fallback
-  username: string;
+  name: string;
   email: string;
   role: UserRole;
   exp: number;
@@ -30,8 +31,8 @@ export interface DecodedToken {
 export interface LoginResponseData {
   token: string;
   user: {
-    id: string;
-    username: string;
+    _id: string;
+    name: string;
     email: string;
     role: UserRole;
   };
@@ -40,8 +41,8 @@ export interface LoginResponseData {
 export interface RegisterResponseData {
   token: string;
   user: {
-    id: string;
-    username: string;
+    _id: string;
+    name: string;
     email: string;
     role: UserRole;
   };

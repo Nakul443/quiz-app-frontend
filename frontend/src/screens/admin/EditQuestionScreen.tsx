@@ -23,7 +23,7 @@ export const EditQuestionScreen: React.FC<Props> = ({ route, navigation }) => {
   const { data: questions, isLoading: isQuestionsLoading, error: questionsError, refetch } = useQuestions(quizId);
   const updateQuestionMutation = useUpdateQuestion();
 
-  const currentQuestion = questions?.find((q) => q.id === questionId);
+  const currentQuestion = questions?.find((q) => q._id === questionId);
 
   const {
     control,
@@ -35,12 +35,12 @@ export const EditQuestionScreen: React.FC<Props> = ({ route, navigation }) => {
   } = useForm<QuestionFormData>({
     resolver: zodResolver(questionSchema),
     defaultValues: {
-      text: '',
+      question_text: '',
       options: [
-        { text: '' },
-        { text: '' },
-        { text: '' },
-        { text: '' },
+        { option_text: '' },
+        { option_text: '' },
+        { option_text: '' },
+        { option_text: '' },
       ],
       correct_option_index: -1,
     },
@@ -56,20 +56,20 @@ export const EditQuestionScreen: React.FC<Props> = ({ route, navigation }) => {
   // Prepopulate form when currentQuestion is loaded
   useEffect(() => {
     if (currentQuestion) {
-      const initialOptions = currentQuestion.options.map((opt) => ({ text: opt.text }));
+      const initialOptions = currentQuestion.options.map((opt) => ({ option_text: opt.option_text }));
       
       // Pad options array up to 4 if it's less, or take up to 4
       while (initialOptions.length < 4) {
-        initialOptions.push({ text: '' });
+        initialOptions.push({ option_text: '' });
       }
 
       // Find index of correct option
       const correctIdx = currentQuestion.options.findIndex(
-        (opt) => opt.id === currentQuestion.correct_option_id
+        (opt) => opt.is_correct === true
       );
 
       reset({
-        text: currentQuestion.text,
+        question_text: currentQuestion.question_text,
         options: initialOptions.slice(0, 4),
         correct_option_index: correctIdx !== -1 ? correctIdx : 0,
       });
@@ -77,14 +77,20 @@ export const EditQuestionScreen: React.FC<Props> = ({ route, navigation }) => {
   }, [currentQuestion, reset]);
 
   const onSubmit = (data: QuestionFormData) => {
+    const formattedOptions = data.options.map((opt, index) => ({
+      option_text: opt.option_text,
+      is_correct: index === data.correct_option_index,
+      order_index: index,
+    }));
+
     updateQuestionMutation.mutate(
       {
         quizId,
         questionId,
         question: {
-          text: data.text,
-          options: data.options,
-          correct_option_index: data.correct_option_index,
+          question_text: data.question_text,
+          order_index: currentQuestion?.order_index || 0,
+          options: formattedOptions,
         },
       },
       {
@@ -135,7 +141,7 @@ export const EditQuestionScreen: React.FC<Props> = ({ route, navigation }) => {
               {/* Question Text */}
               <Controller
                 control={control}
-                name="text"
+                name="question_text"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <Input
                     label="Question Text"
@@ -143,7 +149,7 @@ export const EditQuestionScreen: React.FC<Props> = ({ route, navigation }) => {
                     onBlur={onBlur}
                     onChangeText={onChange}
                     value={value}
-                    error={errors.text?.message}
+                    error={errors.question_text?.message}
                     multiline
                     numberOfLines={3}
                     style={{ minHeight: 80, textAlignVertical: 'top' }}
@@ -166,14 +172,14 @@ export const EditQuestionScreen: React.FC<Props> = ({ route, navigation }) => {
                     <View className="flex-row items-center space-x-2">
                       <Controller
                         control={control}
-                        name={`options.${index}.text`}
+                        name={`options.${index}.option_text`}
                         render={({ field: { onChange, onBlur, value } }) => (
                           <Input
                             placeholder={`Option ${letter}`}
                             onBlur={onBlur}
                             onChangeText={onChange}
                             value={value}
-                            error={errors.options?.[index]?.text?.message}
+                            error={errors.options?.[index]?.option_text?.message}
                             containerClassName="mb-0 flex-1"
                             autoCapitalize="sentences"
                           />

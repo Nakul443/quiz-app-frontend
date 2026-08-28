@@ -5,6 +5,7 @@ import httpClient from '../httpClient';
 import { ApiResponse, Attempt, AttemptResultDetail } from '../../types/api.types';
 
 export interface SubmitAnswerParams {
+  question_id: string;
   selected_option_id: string | null;
 }
 
@@ -20,10 +21,9 @@ export const getAttempt = async (attemptId: string): Promise<ApiResponse<Attempt
 
 export const submitAnswer = async (
   attemptId: string,
-  questionId: string,
   params: SubmitAnswerParams
 ): Promise<ApiResponse<any>> => {
-  const response = await httpClient.patch<ApiResponse<any>>(`/attempts/${attemptId}/answers/${questionId}`, params);
+  const response = await httpClient.patch<ApiResponse<any>>(`/attempts/${attemptId}/answers`, params);
   return response.data;
 };
 

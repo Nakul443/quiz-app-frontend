@@ -46,7 +46,7 @@ export const AttemptQuestionScreen: React.FC<Props> = ({ route, navigation }) =>
 
   // Check if attempt completed on initial load or re-sync
   useEffect(() => {
-    if (attempt && attempt.status === 'completed') {
+    if (attempt && (attempt.status === 'submitted' || attempt.status === 'auto_submitted')) {
       navigation.replace('AttemptResult', { attemptId });
     }
   }, [attempt, attemptId, navigation]);
@@ -79,7 +79,7 @@ export const AttemptQuestionScreen: React.FC<Props> = ({ route, navigation }) =>
       ) {
         // App backgrounded timer safety: Re-fetch attempt details on return to active
         const updatedAttempt = await refetchAttempt();
-        if (updatedAttempt.data?.status === 'completed') {
+        if (updatedAttempt.data && (updatedAttempt.data.status === 'submitted' || updatedAttempt.data.status === 'auto_submitted')) {
           navigation.replace('AttemptResult', { attemptId });
         } else if (updatedAttempt.data?.time_remaining !== undefined) {
           setTimeLeft(updatedAttempt.data.time_remaining);
@@ -100,14 +100,16 @@ export const AttemptQuestionScreen: React.FC<Props> = ({ route, navigation }) =>
     // Save locally for instant UI update
     setSelectedAnswers((prev) => ({
       ...prev,
-      [currentQuestion.id]: optionId,
+      [currentQuestion._id]: optionId,
     }));
 
     // Persist selected option immediately to the database (patch answers)
     submitAnswerMutation.mutate({
       attemptId,
-      questionId: currentQuestion.id,
-      answer: { selected_option_id: optionId },
+      answer: {
+        question_id: currentQuestion._id,
+        selected_option_id: optionId,
+      },
     });
   };
 
@@ -171,7 +173,7 @@ export const AttemptQuestionScreen: React.FC<Props> = ({ route, navigation }) =>
 
   const currentQuestion = questions[currentIdx];
   
-  const currentSelectedOptionId = selectedAnswers[currentQuestion.id] || null;
+  const currentSelectedOptionId = selectedAnswers[currentQuestion._id] || null;
 
   return (
     <View className="flex-1 bg-gray-50 p-4">

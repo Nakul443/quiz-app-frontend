@@ -32,8 +32,8 @@ export const QuizDetailUserScreen: React.FC<Props> = ({ route, navigation }) => 
           onPress: () => {
             startAttemptMutation.mutate(quizId, {
               onSuccess: (response) => {
-                if (response.success && response.data?.id) {
-                  navigation.replace('AttemptQuestion', { attemptId: response.data.id });
+                if (response.success && response.data?._id) {
+                  navigation.replace('AttemptQuestion', { attemptId: response.data._id });
                 }
               },
             });

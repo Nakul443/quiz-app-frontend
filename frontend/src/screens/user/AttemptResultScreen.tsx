@@ -46,7 +46,7 @@ export const AttemptResultScreen: React.FC<Props> = ({ route, navigation }) => {
     return answer ? answer.selected_option_id : null;
   };
 
-  const isPassed = score >= 50; // Simple threshold indicator
+  const isPassed = score !== null && score >= 50; // Simple threshold indicator
 
   return (
     <View className="flex-1 bg-gray-50">
@@ -95,11 +95,15 @@ export const AttemptResultScreen: React.FC<Props> = ({ route, navigation }) => {
           Assessment Review
         </Text>
 
-        {(attempt.quiz as any)?.questions?.map((question: any, index: number) => {
-          const selectedOptionId = getSelectedOptionId(question.id);
+        {attempt.quiz?.questions?.map((question, index) => {
+          const selectedOptionId = getSelectedOptionId(question._id);
+
+          // Find correct option from options array since backend stores is_correct flag per option
+          const correctOption = question.options.find((opt) => opt.is_correct === true);
+          const correctOptionId = correctOption?._id;
 
           return (
-            <View key={question.id} className="mb-2">
+            <View key={question._id} className="mb-2">
               <View className="flex-row items-center mb-1">
                 <Text className="text-xs font-bold text-primary mr-2 uppercase">
                   Question {index + 1}
@@ -108,7 +112,7 @@ export const AttemptResultScreen: React.FC<Props> = ({ route, navigation }) => {
                   <Text className="text-[10px] text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full font-semibold border border-amber-100">
                     ⚠ Skipped
                   </Text>
-                ) : selectedOptionId === question.correct_option_id ? (
+                ) : selectedOptionId === correctOptionId ? (
                   <Text className="text-[10px] text-success bg-success-light px-2 py-0.5 rounded-full font-semibold border border-success/10">
                     ✓ Correct
                   </Text>
@@ -122,7 +126,7 @@ export const AttemptResultScreen: React.FC<Props> = ({ route, navigation }) => {
               <QuestionCard
                 question={question}
                 selectedOptionId={selectedOptionId}
-                correctOptionId={question.correct_option_id}
+                correctOptionId={correctOptionId}
                 showFeedback // highlights correct/incorrect answers instantly
               />
             </View>
