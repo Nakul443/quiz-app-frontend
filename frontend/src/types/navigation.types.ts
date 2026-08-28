@@ -1,6 +1,8 @@
 // this file contains TypeScript types for navigation parameters used in the application
 // which are used with React Navigation to define the structure of the navigation stacks and tabs
 
+// describes what the data should look like when navigating between screens in the app
+
 import { NavigatorScreenParams } from '@react-navigation/native';
 
 export type AuthStackParamList = {
