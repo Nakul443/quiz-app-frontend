@@ -71,3 +71,6 @@ yarn-error.log
 **/.env.production.local
 **/.env.example
 !**/.env.example
+
+
+/frontend/FRONTEND_SPEC.md
